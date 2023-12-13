@@ -12,14 +12,14 @@ class Monitor {
         buffer = new int[size];
     }
 
-    public synchronized void produce(int c) {
+    public synchronized void produce(int message) {
         if (ready) {
             return;
         }
 
-        System.out.println("Отправлено сообщение " + c);
+        System.out.println("Отправлено" + message);
 
-        buffer[in] = c;
+        buffer[in] = message;
         in = (in + 1) % buffer.length;
 
         ready = true;
@@ -43,7 +43,7 @@ class Monitor {
         int c = buffer[out];
         out = (out + 1) % buffer.length;
 
-        System.out.println("Получено сообщение  " + c);
+        System.out.println("Получено" + c);
 
         ready = false;
     }

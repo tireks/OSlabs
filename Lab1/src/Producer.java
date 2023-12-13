@@ -11,7 +11,7 @@ public class Producer implements Runnable {
     public void run() {
         while (true) {
             Random random = new Random();
-            monitor.produce(random.nextInt(100));
+            monitor.produce();
         }
     }
 }

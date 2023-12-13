@@ -3,24 +3,14 @@ import java.util.Random;
 class Monitor {
     private boolean ready = false;
 
-    private int[] buffer;
-
-    private int in = 0, out = 0;
-
-    Monitor(int size)
-    {
-        buffer = new int[size];
-    }
-
-    public synchronized void produce(int message) {
+    public synchronized void produce() {
         if (ready) {
             return;
         }
 
-        System.out.println("Отправлено" + message);
+        System.out.println("Отправляю событие");
 
-        buffer[in] = message;
-        in = (in + 1) % buffer.length;
+
 
         ready = true;
 
@@ -37,22 +27,27 @@ class Monitor {
             try {
                 wait();
             } catch (InterruptedException e) {
+                System.out.println("проблемы с потребителем");
+                Thread.currentThread().interrupt();
+
             }
         }
 
-        int c = buffer[out];
-        out = (out + 1) % buffer.length;
-
-        System.out.println("Получено" + c);
+        System.out.println("Получаю событие");
 
         ready = false;
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 }
 
 
 public class Main {
     public static void main(String[] args) {
-        Monitor monitor = new Monitor(5);
+        Monitor monitor = new Monitor();
 
         Thread producerThread = new Thread(new Producer(monitor));
         Thread consumerThread = new Thread(new Consumer(monitor));
